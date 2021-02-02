@@ -5,6 +5,10 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 let expressHbs = require('express-handlebars');
 
+//db import
+let db = require('./db/db');
+db();
+
 var indexRouter = require('./routes/index');
 
 var app = express();
