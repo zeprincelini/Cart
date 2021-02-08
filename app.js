@@ -5,7 +5,11 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const expressHbs = require('express-handlebars');
 const session = require('express-session');
-const route = require('./routes/index')
+const passport = require('passport');
+const flash = require('connect-flash');
+const route = require('./routes/index');
+
+require('./config/passport');
 //db import
 let db = require('./db/db');
 db();
@@ -23,6 +27,9 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(session({secret: 'myKey', resave: false, saveUninitialized: false}));
+app.use(flash());
+app.use(passport.initialize());
+app.use(passport.session());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', route);
