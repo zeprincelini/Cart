@@ -1,6 +1,7 @@
 const passport =  require('passport');
 const User = require('../models/user');
 const bcrypt = require('bcrypt');
+const { check, validationResult } = require('express-validator');
 const LocalStrategy = require('passport-local').Strategy;
 
 passport.serializeUser((user, done) => {
@@ -25,8 +26,6 @@ passport.use('local.signup', new LocalStrategy({
        if(doc){
            return done(null, false, {message: 'Email already in use!'});
        }
-    //    let newUser = new User();
-    //    newUser.email = email;
        bcrypt.hash(password, 10).then((hash) => {
         let newUser = new User();
         newUser.email = email;

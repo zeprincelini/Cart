@@ -6,9 +6,10 @@ const logger = require('morgan');
 const expressHbs = require('express-handlebars');
 const session = require('express-session');
 const passport = require('passport');
+const bodyParser = require('body-parser');
 const flash = require('connect-flash');
 const route = require('./routes/index');
-
+const { body, validationResult } = require('express-validator');
 require('./config/passport');
 //db import
 let db = require('./db/db');
@@ -23,8 +24,8 @@ app.engine('.hbs', expressHbs({defaultLayout: 'layout', extname: '.hbs'}));
 app.set('view engine', '.hbs');
 
 app.use(logger('dev'));
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(session({secret: 'myKey', resave: false, saveUninitialized: false}));
 app.use(flash());

@@ -1,11 +1,28 @@
 const express = require('express');
 const router = express.Router();
 const Product = require('../models/product');
+const { check, validationResult } = require('express-validator');
 const csrf = require('csurf');
 const passport = require('passport');
 
 let csrfProtection = csrf({ cookie: true })
 router.use(csrfProtection);
+
+
+//Functions
+// validationBodyRules = [
+//   body('email', 'invalid email').isEmail(),
+//   body('password', 'invalid password').isLength({min: 4})
+// ];
+
+// checkRules = (req, res, next) => {
+//   const errors = validationResult(req);
+//   if (!errors.isEmpty()) {
+//     return res.status(400).json({ errors: errors.array() });
+//   }
+//   next();
+// };
+
 
 /* GET home page. */
 router.get('/', async (req, res, next) => {
@@ -22,15 +39,27 @@ router.get('/user/signup', csrfProtection, (req, res, next) => {
 });
 
 //Post Signup
-router.post('/user/signup', passport.authenticate('local.signup', {
-  successRedirect: '/user/profile',
-  failureRedirect: '/user/signup',
-  failureFlash: true
-}));
+router.post('/user/signup', check('email', 'invalid Email').isEmail(), check('password', 'invalid passord').isLength({min:4}), (req, res, next) => {
+  let errors = validationResult(req);
+  if (!errors.isEmpty()) {
+      let messages = [];
+      errors.array().forEach((err) => {
+          messages.push(err.msg);
+      });
+      req.flash('error', messages)
+      res.redirect('/user/signup');
+    }
+    next();  
+  }, passport.authenticate('local.signup', {
+    successRedirect: '/user/profile',
+    failureRedirect: '/user/signup',
+    failureFlash: true
+  }));
 
 //GET Profile
 router.get('/user/profile', (req, res) => {
   res.render('user/profile', {message: 'initiated'});
 })
+
 
 module.exports = router;
