@@ -56,6 +56,30 @@ router.post('/user/signup', check('email', 'invalid Email').isEmail(), check('pa
     failureFlash: true
   }));
 
+//Get Sign In
+router.get('/user/signin', (req, res) => {
+  let message = req.flash('error');
+  res.render('user/signin', {csrfToken: req.csrfToken(), message: message, hasError: message.length > 0});
+});
+
+//Post Signin
+router.post('/user/signin', check('email', 'email incorrect').isEmail(), check('password', 'password incorrect').not().isEmpty(),(req, res, next) => {
+  let errors = validationResult(req);
+  if(!errors.isEmpty()){
+    let messages = [];
+      errors.array().forEach((err) => {
+          messages.push(err.msg);
+      });
+      req.flash('error', messages)
+      res.redirect('/user/signin');
+  }
+  next();
+}, passport.authenticate('local.signin', {
+  successRedirect: '/user/profile',
+  failureRedirect: '/user/signin',
+  failureFlash: true
+}));
+
 //GET Profile
 router.get('/user/profile', (req, res) => {
   res.render('user/profile', {message: 'initiated'});

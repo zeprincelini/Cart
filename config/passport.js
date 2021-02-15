@@ -38,13 +38,26 @@ passport.use('local.signup', new LocalStrategy({
         });
 
        })
-    //    newUser.password = newUser.encryptPassword(password);
-    //    newUser.save((err, doc) => {
-    //        if(err){
-    //            return done(err);
-    //        }
-    //        return done(null, newUser);
-    //    })
+    })
+}))
 
+passport.use('local.signin', new LocalStrategy({
+    usernameField: 'email',
+    passwordField: 'password',
+    passReqToCallback: true
+}, (req, email, password, done) => {
+    User.findOne({'email': email}, (err, doc) => {
+        if(err){
+            return done(err)
+        }
+       if(!doc){
+           return done(null, false, {message: 'No User Found!'});
+       }
+       bcrypt.compare(password, User.password, function(err, res){
+           if(err){
+            return done(null, false, {message: 'Wrong Password'});
+           }
+           return done(null, doc);
+       })
     })
 }))
