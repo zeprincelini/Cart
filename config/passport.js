@@ -53,10 +53,12 @@ passport.use('local.signin', new LocalStrategy({
        if(!doc){
            return done(null, false, {message: 'No User Found!'});
        }
-       bcrypt.compare(password, User.password, function(err, res){
-           if(err){
+       bcrypt.compare(password, doc.password, function(err, result){
+           if(err || !result){
             return done(null, false, {message: 'Wrong Password'});
            }
+            console.log("password: ", password);
+            console.log("doc password: ", doc.password);
            return done(null, doc);
        })
     })
