@@ -15,8 +15,8 @@ const user = require('./routes/users');
 const { body, validationResult } = require('express-validator');
 require('./config/passport');
 //db import
-let db = require('./db/db');
-const { Mongoose } = require('mongoose');
+const db = require('./db/db');
+const mongoose = require('mongoose');
 db();
 
 //var indexRouter = require('./routes/index');
@@ -34,9 +34,9 @@ app.use(cookieParser());
 app.use(session({secret: 'myKey', 
 resave: false, 
 saveUninitialized: false,
-store: new mongoStore({mongooseConnection: Mongoose.connection,
+store: new mongoStore({mongooseConnection: mongoose.connection}),
 cookie: { maxAge: 180 * 60 * 1000 }})
-}));
+);
 app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());

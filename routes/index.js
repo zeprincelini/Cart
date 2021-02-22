@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Product = require('../models/product');
+const Cart = require('../models/cart');
 
 
 //Functions
@@ -24,6 +25,23 @@ router.get('/', async (req, res, next) => {
     res.render('shop/index', { title: 'Express', myproducts: doc });
   }).lean();
  
+});
+
+//Get Cart Route
+router.get('/add-to-cart/:id', (req, res, next) => {
+let productId = req.params.id;
+let cart = new Cart(req.session.cart ? req.session.cart : {});
+
+Product.findById(productId, (err, product) => {
+  if(err){
+    res.status('401');
+    res.redirect('/')
+  }
+  cart.add(product, product.id);
+  req.session.cart = cart;
+  console.log(req.session.cart);
+  res.redirect('/');
+});
 });
 
 module.exports = router;
