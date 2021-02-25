@@ -1,0 +1,39 @@
+<div class="row">
+    {{#if products}}
+    <div class="col-sm-6 offset-sm-3 col-md-6 offset-md-3">
+        <div class="mt-4">
+            <h1>What You're Getting</h1>
+        </div>
+        {{#each products}}
+            <div class="d-flex justify-content-between mt-4">
+            <div class="title">
+                <p>{{this.item.title}}</p>
+            </div>
+            <div class="amout">
+                ${{this.price}}
+            </div>
+            <div>
+                <span class="badge badge-secondary">{{this.qty}}</span>
+            </div>
+            <div class="dropdown">
+                <button class="btn btn-primary dropdown-toggle" id="menubutton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" type="button">Actions</button>
+                <div class="dropdown-menu" aria-labelledby="menubutton">
+                    <a href="" class="dropdown-item">Remove from cart</a>
+                    <a href="" class="dropdown-item">Reduce</a>
+                </div>
+            </div>
+        </div>
+        <hr>
+        {{/each}}
+         <div class="d-flex justify-content-around mt-4">
+            <p>Total Price: {{totalPrice}}</p>
+            <button class="btn btn-success">checkout</button>
+        </div>
+        {{else}}
+            <div class="message">
+                <h3>Sorry, You Have No Items in Your Cart!</h3>
+            </div>
+        </div>
+        {{/if}}
+    </div>
+</div>

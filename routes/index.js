@@ -44,4 +44,13 @@ Product.findById(productId, (err, product) => {
 });
 });
 
+//Get Shopping Cart Page
+router.get('/cart', (req, res, next) => {
+  if(!req.session.cart){
+    return res.render('shop/cart', {products: null});
+  }
+  let cart = new Cart(req.session.cart);
+  res.render('shop/cart', {products: cart.generateArray(), totalPrice: cart.totalPrice})
+});
+
 module.exports = router;
